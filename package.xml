@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+	<name>dr_ros</name>
+	<version>1.0.0</version>
+	<description>Delft Robotics ROS utility.</description>
+	<license>Apache 2.0</license>
+
+	<maintainer email="maarten@de-vri.es">Maarten de Vries</maintainer>
+	<author email="maarten@de-vri.es">Maarten de Vries</author>
+
+	<buildtool_depend>catkin</buildtool_depend>
+	<depend>dr_base</depend>
+	<depend>dr_log</depend>
+	<depend>dr_param</depend>
+	<depend>roscpp</depend>
+	<depend>roslib</depend>
+	<depend>tf</depend>
+</package>

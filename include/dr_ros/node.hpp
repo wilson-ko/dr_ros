@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <utility>
 
-
-
 namespace dr {
 
 /// Shorthand to get a ServiceEvent type for a service.
@@ -18,7 +16,7 @@ template<typename Service>
 using ServiceEvent = ros::ServiceEvent<typename Service::Request, typename Service::Response>;
 
 /// A ROS node wrapper with some utility functions.
-class Node : ros::NodeHandle {
+class Node : public ros::NodeHandle {
 private:
 	/// Run prefix for saving log files and logged data.
 	std::string run_prefix_;

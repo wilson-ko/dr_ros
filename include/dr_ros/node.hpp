@@ -28,6 +28,10 @@ public:
 	/// Construct a node.
 	Node();
 
+	/// Get the raw node handle.
+	ros::NodeHandle       & nodeHandle()       { return *this; }
+	ros::NodeHandle const & nodeHandle() const { return *this; }
+
 	/// Get the run prefix for saving log files and logged data.
 	std::string runPrefix();
 

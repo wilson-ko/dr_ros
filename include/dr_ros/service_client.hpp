@@ -7,7 +7,7 @@
 
 namespace dr {
 
-class ServiceError : std::runtime_error {
+class ServiceError : public std::runtime_error {
 	using std::runtime_error::runtime_error;
 };
 

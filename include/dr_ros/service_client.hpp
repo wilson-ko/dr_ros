@@ -1,9 +1,10 @@
 #pragma once
 
-#include <string>
-
 #include <ros/ros.h>
 #include <dr_log/dr_log.hpp>
+
+#include <string>
+#include <mutex>
 
 namespace dr {
 
@@ -25,6 +26,9 @@ class ServiceClient {
 
 	/// The name of the service.
 	std::string name_;
+
+	/// Mutex to serialize service calls.
+	std::mutex mutex_;
 
 public:
 	/// Construct a service client without connecting it to a service.
@@ -76,6 +80,7 @@ public:
 	 * \throws ServiceError when the service call fails.
 	 */
 	Response operator() (Request const & request, bool reconnect = true, ros::Duration timeout = ros::Duration(-1), bool verbose = true) {
+		std::lock_guard<std::mutex> lock{mutex_};
 		Response response;
 		if (reconnect) this->reconnect(timeout, verbose);
 		if (!client_.call(request, response)) throw ServiceError("Failed to call service `" + name_ + "'.");
@@ -84,12 +89,14 @@ public:
 
 	/// Call the service.
 	bool operator() (Request const & request, Response & response, bool reconnect = true, ros::Duration timeout = ros::Duration(-1), bool verbose = true) {
+		std::lock_guard<std::mutex> lock{mutex_};
 		if (reconnect) this->reconnect(timeout, verbose);
 		return client_.call(request, response);
 	}
 
 	/// Call the service.
 	bool operator() (Service & service, bool reconnect = true, ros::Duration timeout = ros::Duration(-1), bool verbose = true) {
+		std::lock_guard<std::mutex> lock{mutex_};
 		if (reconnect) this->reconnect(timeout, verbose);
 		return client_.call(service);
 	}

@@ -1,0 +1,5 @@
+<launch>
+	<arg name="project" />
+	<param name="run_prefix" command="'$(find dr_launch)/bin/generate-run-prefix' '$(arg project)'" />
+</launch>
+<!-- vi: set ft=xml: -->

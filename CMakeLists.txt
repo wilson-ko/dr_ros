@@ -10,6 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
 	tf
 )
 
+find_package(Boost REQUIRED COMPONENTS filesystem)
+
 catkin_package(
 	INCLUDE_DIRS include
 	LIBRARIES ${PROJECT_NAME}
@@ -27,7 +29,7 @@ add_library(${PROJECT_NAME}
 	src/resource.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 dr_add_gtest(resource test/resource.cpp)
 target_link_libraries(${PROJECT_NAME}_test_resource   ${PROJECT_NAME} ${catkin_LIBRARIES})

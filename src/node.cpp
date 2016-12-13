@@ -3,6 +3,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time/time_facet.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #include <sstream>
 
@@ -69,6 +70,9 @@ Node::Node() : ros::NodeHandle("~") {
 	run_prefix_           = searchParam<std::string>("run_prefix", fallback);
 	node_prefix_          = run_prefix_   + "/" + node_name;
 	std::string log_file  = node_prefix_  + "/" + node_name + ".log";
+
+	boost::system::error_code error;
+	boost::filesystem::create_directories(node_prefix_, error);
 
 	setupLogging(log_file, node_name);
 };

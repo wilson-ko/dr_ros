@@ -1,17 +1,19 @@
 #include "node.hpp"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/date_time/time_facet.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/time_facet.hpp>
 #include <boost/filesystem/operations.hpp>
 
-#include <sstream>
-
-#include <cstdlib>
-#include <cerrno>
-#include <unistd.h>
-#include <sys/types.h>
 #include <pwd.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <sstream>
 
 namespace dr {
 
@@ -75,6 +77,17 @@ Node::Node() : ros::NodeHandle("~") {
 	boost::filesystem::create_directories(node_prefix_, error);
 
 	setupLogging(log_file, node_name);
+
+	std::ofstream parameter_dump(node_prefix_ + "/parameters.xml");
+	if (!parameter_dump) {
+		// Pray errno is (still) set correctly.
+		int error = errno;
+		DR_ERROR("Failed to open parameters.xml: error " << error << ": " << std::strerror(error));
+	} else {
+		XmlRpc::XmlRpcValue value;
+		ros::param::get("/", value);
+		parameter_dump << value.toXml();
+	}
 };
 
 std::string Node::runPrefix() {

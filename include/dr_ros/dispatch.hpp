@@ -34,7 +34,7 @@ void dispatch(ros::CallbackQueueInterface & queue, Functor && functor) {
 /// Dispatch a callback to the default callback queue of a node.
 template<typename Functor>
 void dispatch(ros::NodeHandle & node, Functor && functor) {
-	return dispatch(*node.getCallbackQueue(), functor);
+	return dispatch(*node.getCallbackQueue(), std::forward<Functor>(functor));
 }
 
 }

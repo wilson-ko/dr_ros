@@ -1,9 +1,12 @@
 #pragma once
+#include <dr_log/dr_log.hpp>
+
+#include <ros/node_handle.h>
+#include <ros/service_client.h>
+
+#include <boost/optional.hpp>
 
 #include <string>
-
-#include <ros/ros.h>
-#include <dr_log/dr_log.hpp>
 
 namespace dr {
 
@@ -18,7 +21,7 @@ class ServiceClient {
 	using Response = typename Service::Response;
 
 	/// The node to use for connecting to services.
-	ros::NodeHandle * node_ = nullptr;
+	boost::optional<ros::NodeHandle> node_;
 
 	/// The internal service client.
 	ros::ServiceClient client_;
@@ -47,7 +50,7 @@ public:
 
 	/// Connect to a service by name.
 	bool connect(ros::NodeHandle & node, std::string name, bool wait = true, ros::Duration const & timeout = ros::Duration(-1), bool verbose = true) {
-		node_   = &node;
+		node_   = node;
 		name_   = name;
 		client_ = node_->serviceClient<Request, Response>(name_, true);
 		if (wait) return this->wait(timeout, verbose);

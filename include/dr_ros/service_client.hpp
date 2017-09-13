@@ -38,6 +38,11 @@ public:
 		connect(node, name, wait, timeout, verbose);
 	}
 
+	/// Get the name of the service.
+	std::string const & name() const {
+		return name_;
+	}
+
 	/// Check if the service is connected.
 	bool isConnected() const {
 		return client_.isValid();

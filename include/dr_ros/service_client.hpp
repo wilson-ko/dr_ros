@@ -34,8 +34,13 @@ public:
 	ServiceClient() {}
 
 	/// Construct a service client and connect it to a service.
-	ServiceClient(ros::NodeHandle & node, std::string const & name, bool wait = true, ros::Duration timeout = ros::Duration(-1), bool verbose = true) {
-		connect(node, name, wait, timeout, verbose);
+	ServiceClient(ros::NodeHandle node, std::string const & name, bool wait = true, ros::Duration timeout = ros::Duration(-1), bool verbose = true) {
+		connect(std::move(node), name, wait, timeout, verbose);
+	}
+
+	/// Get the node handle used to connect to the service.
+	boost::optional<ros::NodeHandle> node() const {
+		return node_;
 	}
 
 	/// Get the name of the service.
@@ -54,8 +59,8 @@ public:
 	}
 
 	/// Connect to a service by name.
-	bool connect(ros::NodeHandle & node, std::string name, bool wait = true, ros::Duration const & timeout = ros::Duration(-1), bool verbose = true) {
-		node_   = node;
+	bool connect(ros::NodeHandle node, std::string name, bool wait = true, ros::Duration const & timeout = ros::Duration(-1), bool verbose = true) {
+		node_   = std::move(node);
 		name_   = name;
 		client_ = node_->serviceClient<Request, Response>(name_, true);
 		if (wait) return this->wait(timeout, verbose);

@@ -16,7 +16,7 @@ class RosCallbackWrapper : public ros::CallbackInterface {
 
 public:
 	template<typename T>
-	RosCallbackWrapper(T && functor) : functor(std::forward<T>(functor)) {};
+	RosCallbackWrapper(T && functor) : functor(std::forward<T>(functor)) {}
 
 	virtual CallResult call() override {
 		functor();

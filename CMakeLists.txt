@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.8)
 project(dr_ros)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_compile_options(-Wall -Wextra -Wpedantic)
+
 find_package(catkin REQUIRED COMPONENTS
-	dr_base
 	dr_log
 	dr_param
 	roscpp
@@ -18,21 +22,22 @@ catkin_package(
 	CATKIN_DEPENDS dr_log dr_param
 )
 
-dr_include_directories(
-	include/${PROJECT_NAME}
-	${catkin_INCLUDE_DIRS}
-)
+include_directories(include/${PROJECT_NAME})
+include_directories(SYSTEM ${catkin_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}
+	src/argv.cpp
 	src/node.cpp
-	src/signal.cpp
 	src/resource.cpp
+	src/signal.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-dr_add_gtest(resource test/resource.cpp)
-target_link_libraries(${PROJECT_NAME}_test_resource   ${PROJECT_NAME} ${catkin_LIBRARIES})
+catkin_add_gtest(${PROJECT_NAME}_test_resource test/resource.cpp)
+catkin_add_gtest(${PROJECT_NAME}_test_argv     test/argv.cpp)
+target_link_libraries(${PROJECT_NAME}_test_resource ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_test_argv     ${PROJECT_NAME})
 
 install(
 	TARGETS "${PROJECT_NAME}"

@@ -9,7 +9,6 @@
 	<author email="maarten@de-vri.es">Maarten de Vries</author>
 
 	<buildtool_depend>catkin</buildtool_depend>
-	<depend>dr_base</depend>
 	<depend>dr_log</depend>
 	<depend>dr_param</depend>
 	<depend>roscpp</depend>

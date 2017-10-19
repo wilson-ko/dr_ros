@@ -88,7 +88,7 @@ Node::Node() : ros::NodeHandle("~") {
 		ros::param::get("/", value);
 		parameter_dump << value.toXml();
 	}
-};
+}
 
 std::string Node::runPrefix() {
 	return run_prefix_;

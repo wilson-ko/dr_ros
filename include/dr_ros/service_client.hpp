@@ -29,13 +29,16 @@ class ServiceClient {
 	/// The name of the service.
 	std::string name_;
 
+	/// Persistent flag
+	bool persistent_;
+
 public:
 	/// Construct a service client without connecting it to a service.
 	ServiceClient() {}
 
 	/// Construct a service client and connect it to a service.
-	ServiceClient(ros::NodeHandle node, std::string const & name, bool wait = true, ros::Duration timeout = ros::Duration(-1), bool verbose = true) {
-		connect(std::move(node), name, wait, timeout, verbose);
+	ServiceClient(ros::NodeHandle node, std::string const & name, bool wait = true, ros::Duration timeout = ros::Duration(-1), bool verbose = true, bool persistent = true) {
+		connect(std::move(node), name, wait, timeout, verbose, persistent);
 	}
 
 	/// Get the node handle used to connect to the service.
@@ -58,11 +61,17 @@ public:
 		return client_.exists();
 	}
 
+	/// Check if the client use persistent service
+	bool isPersistent() {
+		return persistent_;
+	}
+
 	/// Connect to a service by name.
-	bool connect(ros::NodeHandle node, std::string name, bool wait = true, ros::Duration const & timeout = ros::Duration(-1), bool verbose = true) {
+	bool connect(ros::NodeHandle node, std::string name, bool wait = true, ros::Duration const & timeout = ros::Duration(-1), bool verbose = true, bool persistent = true) {
 		node_   = std::move(node);
 		name_   = name;
-		client_ = node_->serviceClient<Request, Response>(name_, true);
+		persistent_ = persistent;
+		client_ = node_->serviceClient<Request, Response>(name_, persistent_);
 		if (wait) return this->wait(timeout, verbose);
 		return client_.isValid();
 	}
@@ -74,7 +83,7 @@ public:
 	bool reconnect(ros::Duration const & timeout = ros::Duration(-1), bool verbose = true) {
 		if (client_.isValid()) return true;
 		if (verbose) DR_WARN("Lost connection to service `" + name_ + "'. Reconnecting.");
-		client_ = node_->serviceClient<Request, Response>(name_, true);
+		client_ = node_->serviceClient<Request, Response>(name_, persistent_);
 		return wait(timeout, verbose);
 	}
 

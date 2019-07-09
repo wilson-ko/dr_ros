@@ -40,6 +40,26 @@ public:
 		connect(std::move(node), name, wait, timeout, verbose, persistent);
 	}
 
+	/// Return a persistent service client.
+	static ServiceClient<Service> makePersitent(
+		std::string const & service,
+		bool wait = false,
+		ros::Duration timeout = ros::Duration(-1),
+		bool verbose = true
+	) {
+		return {ros::NodeHandle{"~"}, service, wait, timeout, verbose, true};
+	}
+
+	/// Return a non persistent service client.
+	static ServiceClient<Service> makeNonPersitent(
+		std::string const & service,
+		bool wait = false,
+		ros::Duration timeout = ros::Duration(-1),
+		bool verbose = true
+	) {
+		return {ros::NodeHandle{"~"}, service, wait, timeout, verbose, false};
+	}
+
 	/// Get the node handle used to connect to the service.
 	std::optional<ros::NodeHandle> node() const {
 		return node_;

@@ -41,7 +41,7 @@ public:
 	}
 
 	/// Return a persistent service client.
-	static ServiceClient<Service> makePersitent(
+	static ServiceClient<Service> makePersistent(
 		std::string const & service,
 		bool wait = false,
 		ros::Duration timeout = ros::Duration(-1),
@@ -51,7 +51,7 @@ public:
 	}
 
 	/// Return a non persistent service client.
-	static ServiceClient<Service> makeNonPersitent(
+	static ServiceClient<Service> makeNonPersistent(
 		std::string const & service,
 		bool wait = false,
 		ros::Duration timeout = ros::Duration(-1),

@@ -12,7 +12,7 @@ template<typename Service>
 class AsyncServiceClient {
 	using Request  = typename Service::Request;
 	using Response = typename Service::Response;
-	using Callback = std::function<void (boost::optional<Response const &>)>;
+	using Callback = std::function<void (std::optional<Response const &>)>;
 
 	ServiceClient<Service> client_;
 	std::thread thread_;
@@ -60,7 +60,7 @@ public:
 				client(request, response, reconnect, timeout, verbose);
 				callback(response);
 			} catch (...) {
-				callback(boost::none);
+				callback(std::nullopt);
 			}
 		});
 	}

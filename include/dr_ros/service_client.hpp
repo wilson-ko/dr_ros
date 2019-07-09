@@ -4,8 +4,7 @@
 #include <ros/node_handle.h>
 #include <ros/service_client.h>
 
-#include <boost/optional.hpp>
-
+#include <optional>
 #include <string>
 
 namespace dr {
@@ -21,7 +20,7 @@ class ServiceClient {
 	using Response = typename Service::Response;
 
 	/// The node to use for connecting to services.
-	boost::optional<ros::NodeHandle> node_;
+	std::optional<ros::NodeHandle> node_;
 
 	/// The internal service client.
 	ros::ServiceClient client_;
@@ -42,7 +41,7 @@ public:
 	}
 
 	/// Get the node handle used to connect to the service.
-	boost::optional<ros::NodeHandle> node() const {
+	std::optional<ros::NodeHandle> node() const {
 		return node_;
 	}
 

@@ -13,7 +13,7 @@ std::string resolveResourceUrl(std::string const & url) {
 	auto scheme_end = std::search(url.begin(), url.end(), scheme_seperator.begin(), scheme_seperator.end());
 
 	// No scheme? Treat the input as a relative file path.
-	if (scheme_end == url.end()) return url;
+	if (scheme_end == url.end()) { return url; }
 
 	std::string scheme(url.begin(), scheme_end);
 	auto authority_start = scheme_end + 3;
@@ -24,15 +24,16 @@ std::string resolveResourceUrl(std::string const & url) {
 
 	if (scheme == "package") {
 		std::string package_path = ros::package::getPath(authority);
-		if (package_path.empty()) throw std::runtime_error("Failed to find package `" + authority + "' for URL: " + url);
+		if (package_path.empty()) { throw std::runtime_error("Failed to find package `" + authority + "' for URL: " + url); }
 		return package_path + path;
+	}
 
-	} else if (scheme == "file") {
-		if (authority.size()) throw std::runtime_error("Tried to convert non-local file URL to file path: " + url);
+	if (scheme == "file") {
+		if (!authority.empty()) { throw std::runtime_error("Tried to convert non-local file URL to file path: " + url); }
 		return path;
 	}
 
 	throw std::runtime_error("Unsupported URL scheme `" + scheme + "' in URL: " + url);
 }
 
-}
+} //namespace dr

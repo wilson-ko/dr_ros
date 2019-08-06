@@ -21,13 +21,13 @@ namespace {
 
 std::string namespaceToName(std::string const & name) {
 	std::string result = name;
-	if (boost::algorithm::starts_with(result, "/")) result.erase(0, 1);
+	if (boost::algorithm::starts_with(result, "/")) { result.erase(0, 1); }
 	boost::algorithm::replace_all(result, "/", ".");
 	return result;
 }
 
 std::string formatTime(boost::posix_time::ptime time, std::string const & format) {
-	using namespace boost::posix_time;
+	using namespace boost::posix_time; //NOLINT
 
 	std::stringstream buffer;
 	std::locale locale(buffer.getloc(), new time_facet(format.c_str()));
@@ -38,20 +38,22 @@ std::string formatTime(boost::posix_time::ptime time, std::string const & format
 
 std::string getHomeDirectory(std::string const & fallback) {
 	char const * homedir = std::getenv("HOME");
-	if (homedir) return homedir;
+	if (static_cast<bool>(homedir)) { return homedir; }
 
-	std::vector<std::uint8_t> buffer(256);
+	constexpr size_t BUFFER_SIZE = 256;
+	std::vector<std::uint8_t> buffer(BUFFER_SIZE);
 	uid_t uid = getuid();
-	passwd info;
+	passwd info{};
 	passwd * result;
 
 	while (true) {
 		errno = 0;
 		int error = getpwuid_r(uid, &info, reinterpret_cast<char *>(buffer.data()), buffer.size(), &result);
 
-		if (error == 0) return result != nullptr ? info.pw_dir : fallback;
+		if (error == 0) { return result != nullptr ? info.pw_dir : fallback; }
 
-		if (errno == ERANGE && buffer.size() < 1024) {
+		constexpr size_t BUFFER_LIMIT = 1024;
+		if (errno == ERANGE && buffer.size() < BUFFER_LIMIT) {
 			buffer.resize(buffer.size() * 2);
 			continue;
 		}
@@ -62,7 +64,7 @@ std::string getHomeDirectory(std::string const & fallback) {
 	return fallback;
 }
 
-}
+} //namespace
 
 Node::Node() : ros::NodeHandle("~") {
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
@@ -98,4 +100,4 @@ std::string Node::nodePrefix() {
 	return node_prefix_;
 }
 
-}
+} //namespace dr

@@ -6,13 +6,13 @@ std::pair<std::vector<std::string>, std::map<std::string, std::string>> splitCom
 
 	for (int i = 0; i < argc; ++i) {
 		char const * sep = argv[i];
-		while (*sep && !(sep[0] == ':' && (sep[1]) == '=')) ++sep;
+		while (static_cast<bool>(*sep) && !(sep[0] == ':' && (sep[1]) == '=')) { ++sep; }
 
 		// If we found a seperator, this is a ROS mapping.
-		if (*sep) {
+		if (static_cast<bool>(*sep)) {
 			ros.insert({{argv[i], sep}, std::string{sep + 2}});
 		} else {
-			regular.push_back(argv[i]);
+			regular.emplace_back(argv[i]);
 		}
 	}
 

@@ -35,10 +35,7 @@ add_library(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 if (CATKIN_ENABLE_TESTING)
-	catkin_add_gtest(${PROJECT_NAME}_test_resource test/resource.cpp)
-	catkin_add_gtest(${PROJECT_NAME}_test_argv     test/argv.cpp)
-	target_link_libraries(${PROJECT_NAME}_test_resource ${PROJECT_NAME})
-	target_link_libraries(${PROJECT_NAME}_test_argv     ${PROJECT_NAME})
+	add_subdirectory(test)
 endif()
 
 install(

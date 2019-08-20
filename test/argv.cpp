@@ -1,17 +1,12 @@
 #include "argv.hpp"
 
-#include <gtest/gtest.h>
-
-int main(int argc, char ** argv) {
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-}
+#include <catch2/catch.hpp>
 
 namespace dr {
 
 using namespace std::string_literals;
 
-TEST(Argv, split) {
+TEST_CASE("Argv -- split", "split") {
 	std::vector<std::string> args = {
 		"aap",
 		"noot:=mies",
@@ -22,17 +17,17 @@ TEST(Argv, split) {
 	for (std::string const & str : args) pointers.push_back(str.data());
 
 	auto [regular, ros] = splitCommandLine(args.size(), pointers.data());
-	ASSERT_EQ(regular, (std::vector{"aap"s, "wim"s}));
-	ASSERT_EQ(ros, (std::map<std::string, std::string>{{"noot", "mies"}, {"zus", "jet"}}));
+	CHECK(regular == std::vector{"aap"s, "wim"s});
+	CHECK(ros == std::map<std::string, std::string>{{"noot", "mies"}, {"zus", "jet"}});
 }
 
-TEST(Argv, splitEmpty) {
+TEST_CASE("Argv -- splitEmpty", "splitEmpty") {
 	auto [regular, ros] = splitCommandLine(0, nullptr);
-	ASSERT_TRUE(regular.empty());
-	ASSERT_TRUE(ros.empty());
+	CHECK(regular.empty());
+	CHECK(ros.empty());
 }
 
-TEST(Argv, emptySource) {
+TEST_CASE("Argv -- emptySource", "emptySource") {
 	std::vector<std::string> args = {
 		":=a",
 	};
@@ -41,11 +36,11 @@ TEST(Argv, emptySource) {
 
 	auto [regular, ros] = splitCommandLine(args.size(), pointers.data());
 
-	ASSERT_TRUE(regular.empty());
-	ASSERT_EQ(ros, (std::map<std::string, std::string>{{"", "a"}}));
+	CHECK(regular.empty());
+	CHECK(ros == std::map<std::string, std::string>{{"", "a"}});
 }
 
-TEST(Argv, emptyTarget) {
+TEST_CASE("Argv -- emptyTarget", "emptyTarget") {
 	std::vector<std::string> args = {
 		"a:=",
 	};
@@ -54,11 +49,11 @@ TEST(Argv, emptyTarget) {
 
 	auto [regular, ros] = splitCommandLine(args.size(), pointers.data());
 
-	ASSERT_TRUE(regular.empty());
-	ASSERT_EQ(ros, (std::map<std::string, std::string>{{"a", ""}}));
+	CHECK(regular.empty());
+	CHECK(ros == std::map<std::string, std::string>{{"a", ""}});
 }
 
-TEST(Argv, emptyBoth) {
+TEST_CASE("Argv -- emptyBoth", "emptyBoth") {
 	std::vector<std::string> args = {
 		":=",
 	};
@@ -67,8 +62,8 @@ TEST(Argv, emptyBoth) {
 
 	auto [regular, ros] = splitCommandLine(args.size(), pointers.data());
 
-	ASSERT_TRUE(regular.empty());
-	ASSERT_EQ(ros, (std::map<std::string, std::string>{{"", ""}}));
+	CHECK(regular.empty());
+	CHECK(ros == std::map<std::string, std::string>{{"", ""}});
 }
 
 }

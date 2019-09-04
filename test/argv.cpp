@@ -14,7 +14,8 @@ TEST_CASE("Argv -- split", "split") {
 		"zus:=jet",
 	};
 	std::vector<char const *> pointers;
-	for (std::string const & str : args) pointers.push_back(str.data());
+	pointers.reserve(args.size());
+	for (std::string const & str : args) { pointers.push_back(str.data()); }
 
 	auto [regular, ros] = splitCommandLine(args.size(), pointers.data());
 	CHECK(regular == std::vector{"aap"s, "wim"s});
@@ -32,7 +33,8 @@ TEST_CASE("Argv -- emptySource", "emptySource") {
 		":=a",
 	};
 	std::vector<char const *> pointers;
-	for (std::string const & str : args) pointers.push_back(str.data());
+	pointers.reserve(args.size());
+	for (std::string const & str : args) { pointers.push_back(str.data()); }
 
 	auto [regular, ros] = splitCommandLine(args.size(), pointers.data());
 
@@ -45,7 +47,8 @@ TEST_CASE("Argv -- emptyTarget", "emptyTarget") {
 		"a:=",
 	};
 	std::vector<char const *> pointers;
-	for (std::string const & str : args) pointers.push_back(str.data());
+	pointers.reserve(args.size());
+	for (std::string const & str : args) { pointers.push_back(str.data()); }
 
 	auto [regular, ros] = splitCommandLine(args.size(), pointers.data());
 
@@ -58,7 +61,8 @@ TEST_CASE("Argv -- emptyBoth", "emptyBoth") {
 		":=",
 	};
 	std::vector<char const *> pointers;
-	for (std::string const & str : args) pointers.push_back(str.data());
+	pointers.reserve(args.size());
+	for (std::string const & str : args) { pointers.push_back(str.data()); }
 
 	auto [regular, ros] = splitCommandLine(args.size(), pointers.data());
 
@@ -66,4 +70,4 @@ TEST_CASE("Argv -- emptyBoth", "emptyBoth") {
 	CHECK(ros == std::map<std::string, std::string>{{"", ""}});
 }
 
-}
+} //namespace dr

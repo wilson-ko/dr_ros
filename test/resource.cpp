@@ -26,4 +26,4 @@ TEST_CASE("ResourceTest -- unsupportedScheme", "unsupportedScheme") {
 	REQUIRE_THROWS(resolveResourceUrl("http://example.com/test.file"));
 }
 
-}
+} //namespace dr

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdio>
 
-#include <signal.h>
+#include <csignal>
 
 #include <ros/ros.h>
 
@@ -15,14 +15,14 @@ namespace {
 		(void) sig;
 		(void) context;
 		(void) siginfo;
-		std::fclose(stdin);
+		std::fclose(stdin); //NOLINT
 		ros::shutdown();
 	}
 
-}
+} //namespace
 
 int fixSigInt() {
-	struct sigaction sigaction_data;
+	struct sigaction sigaction_data{};
 	sigemptyset(&sigaction_data.sa_mask);
 	sigaction_data.sa_handler   = nullptr;
 	sigaction_data.sa_flags     = SA_SIGINFO;
@@ -30,4 +30,4 @@ int fixSigInt() {
 	return sigaction(SIGINT, &sigaction_data, nullptr);
 }
 
-}
+} //namespace dr
